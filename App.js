@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, ScrollView, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, ScrollView, FlatList, Pressable, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { StatusBar } from "expo-status-bar";
 import TaskItems from './components/TaskItems';
 import TaskInput from './components/TaskInput';
@@ -7,6 +7,7 @@ import TaskInput from './components/TaskInput';
 export default function App() {
 
   const [tasks, setTasks] = useState([]);
+  const [modalVisibility, setModalVisibility] = useState(false);
 
   function addTaskHandler(enteredTaskText) {
     // console.log(enteredTaskText);
@@ -20,13 +21,22 @@ export default function App() {
     });
   }
 
+  function modalVisibilityHandler(params) {
+    if(modalVisibility == false){
+      setModalVisibility(true);
+    }
+    else setModalVisibility(false);
+  }
+
   return (
     <View style={styles.appContainer}>
       
-        <TaskInput onAddTask={addTaskHandler} />
+      <TaskInput visible={modalVisibility} collapse={modalVisibilityHandler} onAddTask={addTaskHandler} />
       
-
       <View style={styles.tasksContainer}>
+
+        <Text style={styles.heading}>My Tasks</Text>
+        
         <FlatList
           data={tasks}
           keyExtractor={(item, index) => {
@@ -43,6 +53,16 @@ export default function App() {
             );
           }}
         />
+
+        <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', marginBottom:38 }}>
+          <TouchableHighlight
+            style={styles.button}
+            onPress={modalVisibilityHandler}
+          >
+          <Text style={{fontSize:20, color:"white", padding:12 }}>Add New Task</Text>
+        </TouchableHighlight> 
+        </View>
+
       </View>
 
       <StatusBar style="auto" />
@@ -60,6 +80,33 @@ const styles = StyleSheet.create({
   
   tasksContainer: {
     flex: 7
+  },
+
+  heading: {
+    margin: 8,
+    padding: 3,
+    fontSize: 35,
+    fontWeight: "600",
+    fontFamily:"Bodoni 72"
+  },
+
+  button: {
+    borderRadius: 50, // Assuming a button width and height of 100
+    padding: 0,
+    elevation: 20,
+    backgroundColor: "#0e7afe",
+    borderWidth:1,
+    borderColor: "#0a51a7",
+    width: 200, 
+    height: 50,
+    alignItems: "center",
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.7,
+    shadowRadius: 20,
   },
 
 });

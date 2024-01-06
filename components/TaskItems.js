@@ -3,13 +3,15 @@ import { StyleSheet, Text, View, Button, TextInput, ScrollView, FlatList, Pressa
 
 export default function TaskItems(props) {
     return (
-        // <Pressable onPress={props.onDeleteItem.bind(this, props.id)}>
-        //     <Text style={styles.taskList}> {props.numbering}. {props.text} </Text>
-        // </Pressable>
+      // <Pressable onPress={props.onDeleteItem.bind(this, props.id)}>
+      //     <Text style={styles.taskList}> {props.numbering}. {props.text} </Text>
+      // </Pressable>
 
-        <TouchableOpacity onPress={props.onDeleteItem.bind(this, props.id)} >
-            <Text style={styles.taskList}> {props.numbering}. {props.text} </Text>
-        </TouchableOpacity>
+      <TouchableOpacity onPress={props.onDeleteItem.bind(this, props.id)}>
+        <Text style={styles.taskList}>
+          {props.numbering}. {props.text}
+        </Text>
+      </TouchableOpacity>
     );
 }
 
