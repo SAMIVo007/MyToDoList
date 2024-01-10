@@ -1,42 +1,66 @@
-import { useState } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, ScrollView, FlatList, Pressable, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { useState, useRef, useCallback } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TextInput,
+  ScrollView,
+  FlatList,
+  Pressable,
+  TouchableOpacity,
+  TouchableHighlight,
+  KeyboardAvoidingView,
+  Modal,
+} from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useMemo } from "react";
 import { StatusBar } from "expo-status-bar";
-import TaskItems from './components/TaskItems';
-import TaskInput from './components/TaskInput';
+import TaskItems from "./components/TaskItems";
+import TaskInput from "./components/TaskInput";
+import BottomSheet from "@gorhom/bottom-sheet";
 
 export default function App() {
-
   const [tasks, setTasks] = useState([]);
   const [modalVisibility, setModalVisibility] = useState(false);
 
   function addTaskHandler(enteredTaskText) {
     // console.log(enteredTaskText);
     // setTasks([...tasks, enteredTaskText]);   NOT RECOMMENDED!
-    setTasks(currentTasks => [...currentTasks, {text: enteredTaskText, id: Math.random().toString()}]);
+    setTasks((currentTasks) => [
+      ...currentTasks,
+      { text: enteredTaskText, id: Math.random().toString() },
+    ]);
   }
 
   function deleteTaskHandler(id) {
-    setTasks(currentTasks => {
+    setTasks((currentTasks) => {
       return currentTasks.filter((items) => items.id !== id);
     });
   }
 
   function modalVisibilityHandler(params) {
-    if(modalVisibility == false){
+    if (modalVisibility == false) {
       setModalVisibility(true);
-    }
-    else setModalVisibility(false);
+    } else setModalVisibility(false);
   }
+
+  const [visible, setVisible] = useState(false);
+  const toggleBottomSheet = () => {
+    setVisible(!visible);
+  };
 
   return (
     <View style={styles.appContainer}>
-      
-      <TaskInput visible={modalVisibility} collapse={modalVisibilityHandler} onAddTask={addTaskHandler} />
-      
-      <View style={styles.tasksContainer}>
+      <TaskInput
+        visible={modalVisibility}
+        collapse={modalVisibilityHandler}
+        onAddTask={addTaskHandler}
+      />
 
+      <View style={styles.tasksContainer}>
         <Text style={styles.heading}>My Tasks</Text>
-        
+
         <FlatList
           data={tasks}
           keyExtractor={(item, index) => {
@@ -54,15 +78,32 @@ export default function App() {
           }}
         />
 
-        <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', marginBottom:38 }}>
-          <TouchableHighlight
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "flex-end",
+            alignItems: "center",
+            marginBottom: 0,
+            backfaceVisibility: "visible",
+          }}
+        >
+          <TouchableOpacity
             style={styles.button}
             onPress={modalVisibilityHandler}
+            activeOpacity={0.8}
           >
-          <Text style={{fontSize:20, color:"white", padding:12 }}>Add New Task</Text>
-        </TouchableHighlight> 
+            <Text
+              style={{
+                fontSize: 20,
+                color: "white",
+                padding: 12,
+                paddingTop: 10,
+              }}
+            >
+              Add New Task
+            </Text>
+          </TouchableOpacity>
         </View>
-
       </View>
 
       <StatusBar style="auto" />
@@ -75,11 +116,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     paddingTop: 50,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
   },
-  
+
   tasksContainer: {
-    flex: 7
+    flex: 1,
   },
 
   heading: {
@@ -87,26 +128,18 @@ const styles = StyleSheet.create({
     padding: 3,
     fontSize: 35,
     fontWeight: "600",
-    fontFamily:"Bodoni 72"
   },
 
   button: {
     borderRadius: 50, // Assuming a button width and height of 100
     padding: 0,
     elevation: 20,
-    backgroundColor: "#0e7afe",
-    borderWidth:1,
+    backgroundColor: "#0d54ac",
+    borderWidth: 1,
     borderColor: "#0a51a7",
-    width: 200, 
+    width: 200,
     height: 50,
     alignItems: "center",
-    shadowColor: '#000000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.7,
-    shadowRadius: 20,
+    marginBottom: 28,
   },
-
 });
